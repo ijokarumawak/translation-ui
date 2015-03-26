@@ -11,3 +11,7 @@ textarea {
 	width: 100%;
 	resize: none;
 }
+
+.panel-body {
+	// border: none;
+}

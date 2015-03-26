@@ -2,73 +2,31 @@
 <html ng-app="app">
   <head>
 		<title><%= title %></title>
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
-
-    <link rel='stylesheet' href='/stylesheets/style.css' />
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="/jquery-easyui-1.4.2/themes/default/easyui.css" />
+    <link rel="stylesheet" href="/stylesheets/style.css" />
   </head>
   <body>
 
-		<!-- Angular Rendering area-->
-		<ng-view></ng-view>
-
-		<!-- Angular Template -->
-		<script type="text/ng-template" id="/docs.html">
-			<p>Here is the documents to translate:</p>
-			<ul>
-				<li ng-repeat="doc in docs">
-					<a href="#/{{doc.id}}/">{{doc.title}}</a>
-				</li>
-			</ul>
-		</script>
-
-		<script type="text/ng-template" id="/doc.html">
-
-    	<h1>{{doc.title}}</h1>
-			<p>{{doc.id}}</p>
-
-			<div class="btn-group">
-				<a type="button" href="/" class="btn btn-default" aria-label="Back">
-				  <span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span>
-				</a>
-				<button type="button" ng-click="edit()"
-					class="btn btn-default" aria-label="Edit">
-				  <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
-				</button>
-				<button type="button" ng-click="save()"
-					class="btn btn-success" aria-label="Save">
-				  <span class="glyphicon glyphicon-check" aria-hidden="true"></span>
-				</button>
-			</div>
-
-			<div class="">
-			<div class="progress">
-			  <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;">
-			    60%
-			  </div>
-			</div>
-			</div>
-
-			<table class="table">
-				<tr><th width="4%">#</th><th width="48%">En</th><th width="48%">Ja</th></tr>
-				<tr ng-repeat="sentence in doc.sentences">
-					<td>{{sentence.pos}}</td>
-					<td>{{sentence.txt.en}}</td>
-					<td>
-						<textarea ng-model="sentence.txt.ja" rows="{{sentence.txt.en.length / 30}}" >{{sentence.txt.ja}}</textarea>
-					</td>
-				</tr>
-			</table>
-
-			<span id="top-link-block" ng-if="isWindowBig()">
-			    <a href="#top" onclick="$('html,body').animate({scrollTop:0},'slow');return false;">
-			        <i class="glyphicon glyphicon-chevron-up"></i> Back to Top
-			    </a>
-			</span>
-		</script>
+		<!-- Rendering area -->
+		<div id="panels" class="easyui-layout" style="width:900px; height:600px;">
+						<div ui-view="doc"></div>
+		        <div data-options="region:'north'" style="height:160px">
+							<div ui-view="north"></div>
+		        </div>
+		        <div data-options="region:'south',split:true" style="height:50px">
+							<div ui-view="south"></div>
+		        </div>
+		        <div data-options="region:'center',split:true">
+							<div ui-view="center"></div>
+		        </div>
+		</div>
+		
 
 		<!-- Angular -->
 		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular.min.js"></script>
 		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular-route.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.13/angular-ui-router.js"></script>
 
 		<!-- Bootstrap -->
 		<script src="http://code.jquery.com/jquery-1.11.2.min.js"></script>
@@ -76,8 +34,10 @@
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/ng-clip/0.2.6/ng-clip.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/zeroclipboard/2.2.0/ZeroClipboard.Core.min.js"></script>
 
-
 		<!-- App -->
 		<script src="/javascripts/app.js"></script>
+
+		<!-- easyui -->
+		<script src="/jquery-easyui-1.4.2/jquery.easyui.min.js"></script>
   </body>
 </html>
