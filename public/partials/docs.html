@@ -1,6 +1,7 @@
 <p>Here is the documents to translate:</p>
 <ul>
 	<li ng-repeat="doc in docs">
+		<span>{{doc.status}}</span>
 		<a href="#/docs/{{doc.id}}">{{doc.title}}</a>
 	</li>
 </ul>

@@ -12,6 +12,10 @@
 		class="btn btn-success" aria-label="Save">
 	  <span class="glyphicon glyphicon-check" aria-hidden="true"></span>
 	</button>
+	<span>Status:</span>
+	<select ng-model="doc.status" ng-options="s for s in docStatusOptions">
+		<option value="">-- choose status --</option>
+	</select>
 </div>
 
 <div class="">

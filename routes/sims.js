@@ -42,9 +42,20 @@ router.get('/:id', function(req, res, next) {
 			}
 			// Descending sort.
 			r.sort(function(a, b){
-				if(a.sim < b.sim) return 1;
-				else if(a.sim > b.sim) return -1;
-				else return 0;
+				if(a.sim < b.sim){
+				 	return 1;
+				} else if (a.sim > b.sim){
+				 	return -1;
+				} else {
+					// If similarity is the same, prioritize which has translated text.
+					if(! a.txt.ja && b.txt.ja){
+					 	return 1;
+					} else if(a.txt.ja && ! b.txt.ja){
+					 	return -1;
+					} else {
+						return 0;
+					}
+				}
 			});
 			res.json(r);
 		});

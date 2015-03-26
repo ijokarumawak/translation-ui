@@ -70,6 +70,10 @@ angular.module('app', ['ngRoute', 'ui.router'])
 			function ($scope, $stateParams, DocService) {
 		console.log("DocCtrl is called!", $stateParams);
 
+		$scope.docStatusOptions = [
+			"Translating", "Reviewing", "Done"
+		];
+
 		$scope.save = function(){
 		  console.log("$scope.doc=", $scope.doc);
 			var promise = DocService.save($stateParams.docId, $scope.doc);
@@ -86,9 +90,13 @@ angular.module('app', ['ngRoute', 'ui.router'])
 			function ($scope, $rootScope, $stateParams, DocService) {
 		console.log("SentenceCtrl is called!", $stateParams);
 
-		$scope.getSimilarSentences = function(sid){
-			console.log("Loading Similar sentences...", sid);
-			var promise = DocService.getSimilarSentences(sid);
+		$scope.getSimilarSentences = function(idx){
+			var sentence = $rootScope.doc.sentences[idx];
+			if($rootScope.sentence && $rootScope.sentence.id == sentence.id) {
+				return;
+			}
+			$rootScope.sentence = sentence;
+			var promise = DocService.getSimilarSentences(sentence.id);
 			promise.then(function(result){
 			  console.log("result=", result);
 				$rootScope.similarSentences = result.data;
@@ -98,6 +106,18 @@ angular.module('app', ['ngRoute', 'ui.router'])
 		$scope.isWindowBig = function(){
 			return $(window).height() + 100 < $(document).height();
 		};
+
+  }])
+
+  .controller('SimCtrl',
+		['$scope', '$rootScope', '$stateParams', 'DocService',
+			function ($scope, $rootScope, $stateParams, DocService) {
+		console.log("SimCtrl is called!", $stateParams);
+
+		$scope.copySentence = function(idx){
+			var sentence = $rootScope.similarSentences[idx];
+			$rootScope.sentence.txt.ja = sentence.txt.ja;
+		}
 
   }])
 
@@ -132,7 +152,8 @@ angular.module('app', ['ngRoute', 'ui.router'])
 					controller: 'SentenceCtrl'
 				},
 				'south': {
-					templateUrl: 'partials/similar-sentences.html'
+					templateUrl: 'partials/similar-sentences.html',
+					controller: 'SimCtrl'
 				}
 			}
 		});

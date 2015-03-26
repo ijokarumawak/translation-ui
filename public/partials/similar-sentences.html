@@ -1,10 +1,15 @@
 <table class="table">
-	<tr><th width="4%">id</th><th width="4%">sim</th><th width="46%">En</th><th width="46%">Ja</th></tr>
+	<tr>
+		<th width="4%">id</th><th width="4%">sim</th><th width="46%">En</th><th width="46%">Ja</th><th></th>
+	</tr>
 	<tr ng-repeat="sim in similarSentences">
 		<td>{{sim.id}}</td>
 		<td>{{sim.sim | percentage:2}}</td>
 		<td>{{sim.txt.en}}</td>
 		<td>{{sim.txt.ja}}</td>
+		<td>
+			<button ng-click="copySentence($index)" class="btn btn-default">copy</button>
+		</td>
 	</tr>
 </table>
 

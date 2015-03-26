@@ -13,7 +13,7 @@ var bucket = cluster.openBucket('translation', function(err){
 /* GET docs listing. */
 router.get('/', function(req, res, next) {
 	console.log('Bucket=', bucket);
-	var query = N1qlQuery.fromString('select meta(doc).id, doc.title from translation as doc where _type = "document" order by doc.title');
+	var query = N1qlQuery.fromString('select meta(doc).id, doc.title, doc.status from translation as doc where _type = "document" order by doc.title');
 	bucket.query(query, function(err, r){
 		if(err) {
 			res.status(500).send(bucket.queryhosts);

@@ -2,11 +2,11 @@
 <table class="table">
 	<tr><th width="4%">#</th><th width="48%">En</th><th width="48%">Ja</th></tr>
 	<tr ng-repeat="sentence in doc.sentences">
-		<td>{{sentence.pos}}</td>
+		<td>{{sentence.id}}</td>
 		<td>{{sentence.txt.en}}</td>
 		<td>
 			<textarea ng-model="sentence.txt.ja"
-				ng-focus="getSimilarSentences(sentence.id)"
+				ng-focus="getSimilarSentences($index)"
 				rows="{{sentence.txt.en.length / 30}}" >{{sentence.txt.ja}}</textarea>
 		</td>
 	</tr>
