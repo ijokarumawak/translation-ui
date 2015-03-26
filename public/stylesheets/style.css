@@ -1,5 +1,5 @@
 body {
-  padding: 50px;
+  padding: 5px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 
@@ -12,6 +12,11 @@ textarea {
 	resize: none;
 }
 
+#panels {
+  margin-left: auto;
+  margin-right: auto;
+}
+
 .panel-body {
-	// border: none;
+	border: none;
 }

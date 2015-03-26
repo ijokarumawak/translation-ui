@@ -1,7 +1,5 @@
 angular.module('app', ['ngRoute', 'ui.router'])
 
-/*
-	*/
   .service('DocService', ['$http', function($http){
 		this.query = function(){
 			return $http.get('/docs/').then(function(data){
@@ -138,6 +136,12 @@ angular.module('app', ['ngRoute', 'ui.router'])
 				}
 			}
 		});
+	}])
+
+	.filter('percentage', ['$filter', function ($filter) {
+	  return function (input, decimals) {
+	    return $filter('number')(input * 100, decimals) + '%';
+	  };
 	}])
 
 	.run(['$state', function($state){
