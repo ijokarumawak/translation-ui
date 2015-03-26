@@ -27,6 +27,15 @@ angular.module('app', ['ngRoute', 'ui.router'])
 				return data;
 			});
 		};
+
+    this.getSimilarSentences = function(id){
+
+			console.log("Getting similar sentences with id:" + id);
+			return $http.get('/sims/' + id).then(function(data){
+				console.log(data);
+				return data;
+			});
+		};
 	}])
 
   .controller('DocsCtrl',
@@ -68,16 +77,25 @@ angular.module('app', ['ngRoute', 'ui.router'])
 			var promise = DocService.save($stateParams.docId, $scope.doc);
 			promise.then(function(result){
 			  console.log("result=", result);
+			  console.log("Saved.");
 			});
-			console.log("Saved.");
 		};
 
   }])
 
   .controller('SentenceCtrl',
-		['$scope', '$stateParams', 'DocService',
-			function ($scope, $stateParams, DocService) {
+		['$scope', '$rootScope', '$stateParams', 'DocService',
+			function ($scope, $rootScope, $stateParams, DocService) {
 		console.log("SentenceCtrl is called!", $stateParams);
+
+		$scope.getSimilarSentences = function(sid){
+			console.log("Loading Similar sentences...", sid);
+			var promise = DocService.getSimilarSentences(sid);
+			promise.then(function(result){
+			  console.log("result=", result);
+				$rootScope.similarSentences = result.data;
+			});
+		}
 
 		$scope.isWindowBig = function(){
 			return $(window).height() + 100 < $(document).height();
@@ -116,7 +134,7 @@ angular.module('app', ['ngRoute', 'ui.router'])
 					controller: 'SentenceCtrl'
 				},
 				'south': {
-					templateUrl: 'partials/not-implemented.html'
+					templateUrl: 'partials/similar-sentences.html'
 				}
 			}
 		});

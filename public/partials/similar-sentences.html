@@ -1,0 +1,11 @@
+<p>Similar!</p>
+<table class="table">
+	<tr><th width="4%">id</th><th width="4%">sim</th><th width="46%">En</th><th width="46%">Ja</th></tr>
+	<tr ng-repeat="sim in similarSentences">
+		<td>{{sim.id}}</td>
+		<td>{{sim.sim}}</td>
+		<td>{{sim.txt.en}}</td>
+		<td>{{sim.txt.ja}}</td>
+	</tr>
+</table>
+

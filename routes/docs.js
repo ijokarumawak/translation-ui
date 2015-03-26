@@ -30,6 +30,7 @@ router.get('/:id', function(req, res, next) {
 			res.status(500).send(err);
 			return;
 		}
+
 		res.json(r.value);
 	});
 });

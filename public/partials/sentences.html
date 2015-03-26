@@ -5,7 +5,9 @@
 		<td>{{sentence.pos}}</td>
 		<td>{{sentence.txt.en}}</td>
 		<td>
-			<textarea ng-model="sentence.txt.ja" rows="{{sentence.txt.en.length / 30}}" >{{sentence.txt.ja}}</textarea>
+			<textarea ng-model="sentence.txt.ja"
+				ng-focus="getSimilarSentences(sentence.id)"
+				rows="{{sentence.txt.en.length / 30}}" >{{sentence.txt.ja}}</textarea>
 		</td>
 	</tr>
 </table>
