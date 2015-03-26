@@ -2,31 +2,12 @@ angular.module('app', ['ngRoute', 'ngClipboard'])
 
   .service('DocService', ['$http', function($http){
 		this.query = function(){
-    return [
-      { id: 1, name: 'AngularJS Directives', completed: true, note: 'add notes...', sentences: [
-				{seq: 0, txt: {en: 'It is sunny today.', ja: '今日は天気が良い。'}},
-				{seq: 1, txt: {en: 'It was sunny lastweek.'}},
-				{seq: 2, txt: {en: 'It was sunny lastweek.'}},
-				{seq: 3, txt: {en: 'It was sunny lastweek.'}},
-				{seq: 4, txt: {en: 'It was sunny lastweek.'}},
-				{seq: 5, txt: {en: 'It was sunny lastweek.'}},
-				{seq: 6, txt: {en: 'It was sunny lastweek.'}},
-				{seq: 7, txt: {en: 'It was sunny lastweek.'}},
-				{seq: 8, txt: {en: 'It was sunny lastweek.'}},
-				{seq: 9, txt: {en: 'It was sunny lastweek.'}},
-				{seq: 10, txt: {en: 'It was sunny lastweek.'}},
-				{seq: 11, txt: {en: 'It was sunny lastweek.'}}
-			] },
-      { id: 2, name: 'Data binding', completed: true, note: 'add notes...' },
-      { id: 3, name: '$scope', completed: true, note: 'add notes...' },
-      { id: 4, name: 'Controllers and Modules', completed: true, note: 'add notes...' },
-      { id: 5, name: 'Templates and routes', completed: true, note: 'add notes...' },
-      { id: 6, name: 'Filters and Services', completed: false, note: 'add notes...' },
-      { id: 7, name: 'Get started with Node/ExpressJS', completed: false, note: 'add notes...' },
-      { id: 8, name: 'Setup MongoDB database', completed: false, note: 'add notes...' },
-      { id: "document", name: 'Be awesome!', completed: false, note: 'add notes...' },
-    ];
+			return $http.get('/docs/').then(function(data){
+				console.log(data);
+				return data;
+			});
 		}
+
     this.get = function(id){
 
 			console.log("Getting a doc with id:" + id);
@@ -50,7 +31,12 @@ angular.module('app', ['ngRoute', 'ngClipboard'])
 		['$scope', 'DocService',
 			function ($scope, DocService) {
 		console.log("DocsCtrl is called!");
-    $scope.docs = DocService.query();
+    var promise = DocService.query();
+		promise.then(function(result){
+			$scope.docs = result.data;
+		  console.log("$scope.docs=", $scope.docs);
+		});
+		
   }])
 
   .controller('DocCtrl',

@@ -1,28 +1,26 @@
 var express = require('express');
 var router = express.Router();
 var couchbase = require('couchbase');
+var N1qlQuery = couchbase.N1qlQuery;
 
 /* Connect to Couchbase Cluster */
 var cluster = new couchbase.Cluster('vm.sherlock:8091');
 var bucket = cluster.openBucket('translation', function(err){
 	if(err) throw err;
+	bucket.enableN1ql(['vm.sherlock:8093']);
 });
 
 /* GET docs listing. */
 router.get('/', function(req, res, next) {
-		console.log('Bucket=', bucket);
-    var docs = [
-      { id: 1, name: 'AngularJS Directives', completed: true, note: 'add notes...' },
-      { id: 2, name: 'Data binding', completed: true, note: 'add notes...' },
-      { id: 3, name: '$scope', completed: true, note: 'add notes...' },
-      { id: 4, name: 'Controllers and Modules', completed: true, note: 'add notes...' },
-      { id: 5, name: 'Templates and routes', completed: true, note: 'add notes...' },
-      { id: 6, name: 'Filters and Services', completed: false, note: 'add notes...' },
-      { id: 7, name: 'Get started with Node/ExpressJS', completed: false, note: 'add notes...' },
-      { id: 8, name: 'Setup MongoDB database', completed: false, note: 'add notes...' },
-      { id: "document", name: 'Be awesome!', completed: false, note: 'add notes...' },
-    ];
-	res.json(docs);
+	console.log('Bucket=', bucket);
+	var query = N1qlQuery.fromString('select meta(doc).id, doc.title from translation as doc where _type = "document" order by doc.title');
+	bucket.query(query, function(err, r){
+		if(err) {
+			res.status(500).send(bucket.queryhosts);
+			return;
+		}
+		res.json(r);
+	});
 });
 
 /* Get specific document */
