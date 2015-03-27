@@ -1,4 +1,4 @@
-angular.module('app', ['ngRoute', 'ui.router'])
+angular.module('app', ['ngRoute', 'ui.router', 'ngClipboard'])
 
   .service('DocService', ['$http', function($http){
 		this.query = function(){
@@ -71,7 +71,7 @@ angular.module('app', ['ngRoute', 'ui.router'])
 		console.log("DocCtrl is called!", $stateParams);
 
 		$scope.docStatusOptions = [
-			"Translating", "Reviewing", "Done"
+			"Translating", "Translated", "Reviewing", "Reviewed", "Done"
 		];
 
 		$scope.save = function(){
@@ -101,6 +101,11 @@ angular.module('app', ['ngRoute', 'ui.router'])
 			  console.log("result=", result);
 				$rootScope.similarSentences = result.data;
 			});
+		}
+
+		$scope.getTextToCopy = function(idx){
+			var sentence = $rootScope.doc.sentences[idx];
+			return sentence.txt.ja;
 		}
 
 		$scope.isWindowBig = function(){
@@ -157,6 +162,10 @@ angular.module('app', ['ngRoute', 'ui.router'])
 				}
 			}
 		});
+	}])
+
+	.config(['ngClipProvider', function(ngClipProvider) {
+		ngClipProvider.setPath("zeroclipboard-2.2.0/ZeroClipboard.swf");
 	}])
 
 	.filter('percentage', ['$filter', function ($filter) {
