@@ -16,6 +16,7 @@
 	<select ng-model="doc.status" ng-options="s for s in docStatusOptions">
 		<option value="">-- choose status --</option>
 	</select>
+	<span>Updated at:</span><span ng-bind="doc._updatedAt | date:'yyyy-MM-dd HH:mm:ss'"></span>
 </div>
 
 <div class="">

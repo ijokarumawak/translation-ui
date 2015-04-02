@@ -13,7 +13,7 @@ var bucket = cluster.openBucket('translation', function(err){
 /* GET docs listing. */
 router.get('/', function(req, res, next) {
 	console.log('Bucket=', bucket);
-	var query = N1qlQuery.fromString('select meta(doc).id, doc.title, doc.status from translation as doc where _type = "document" order by doc.title');
+	var query = N1qlQuery.fromString('select meta(doc).id, doc.title, doc.status, doc._updatedAt from translation as doc where _type = "document" order by doc.title');
 	bucket.query(query, function(err, r){
 		if(err) {
 			res.status(500).send(bucket.queryhosts);
@@ -37,12 +37,14 @@ router.get('/:id', function(req, res, next) {
 
 /* Update existing document */
 router.put('/:id', function(req, res, next) {
-	bucket.upsert(req.params.id, req.body, function(err, r){
+	var doc = req.body;
+	doc._updatedAt = new Date().getTime();
+	bucket.upsert(req.params.id, doc, function(err, r){
 		if(err) {
 			res.status(500).send(err);
 			return;
 		}
-		res.status(200).send({msg: 'saved.'});
+		res.status(200).send({msg: 'saved.', doc: doc});
 	});
 });
 

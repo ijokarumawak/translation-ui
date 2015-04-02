@@ -34,6 +34,15 @@ angular.module('app', ['ngRoute', 'ui.router', 'ngClipboard'])
 				return data;
 			});
 		};
+
+    this.getTerm = function(term){
+
+			console.log("Getting a term:" + term);
+			return $http.get('/terms/' + term).then(function(data){
+				console.log(data);
+				return data;
+			});
+		};
 	}])
 
   .controller('DocsCtrl',
@@ -66,8 +75,8 @@ angular.module('app', ['ngRoute', 'ui.router', 'ngClipboard'])
   }])
 
   .controller('DocCtrl',
-		['$scope', '$stateParams', 'DocService',
-			function ($scope, $stateParams, DocService) {
+		['$rootScope', '$scope', '$stateParams', 'DocService',
+			function ($rootScope, $scope, $stateParams, DocService) {
 		console.log("DocCtrl is called!", $stateParams);
 
 		$scope.docStatusOptions = [
@@ -80,6 +89,8 @@ angular.module('app', ['ngRoute', 'ui.router', 'ngClipboard'])
 			promise.then(function(result){
 			  console.log("result=", result);
 			  console.log("Saved.");
+				window.alert(result.data.msg);
+				$rootScope.doc = result.data.doc;
 			});
 		};
 
@@ -96,6 +107,15 @@ angular.module('app', ['ngRoute', 'ui.router', 'ngClipboard'])
 				return;
 			}
 			$rootScope.sentence = sentence;
+			// Get term.
+			var en = sentence.txt.en.toLowerCase().replace(/[^0-9a-z]/g, '');
+			DocService.getTerm(en).then(function(result){
+				// Auto assign.
+				if(result.data.ja && !sentence.txt.ja) {
+					sentence.txt.ja = result.data.ja;
+				}
+			});
+			// Get similar sentences.
 			var promise = DocService.getSimilarSentences(sentence.id);
 			promise.then(function(result){
 			  console.log("result=", result);
@@ -106,6 +126,11 @@ angular.module('app', ['ngRoute', 'ui.router', 'ngClipboard'])
 		$scope.getTextToCopy = function(idx){
 			var sentence = $rootScope.doc.sentences[idx];
 			return sentence.txt.ja;
+		}
+
+		$scope.copyOriginal = function(idx){
+			var sentence = $rootScope.doc.sentences[idx];
+			sentence.txt.ja = sentence.txt.en;
 		}
 
 		$scope.isWindowBig = function(){

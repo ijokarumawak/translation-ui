@@ -1,9 +1,11 @@
-<a href="" clip-copy="'foo bar baz'" >Copy</a>
 <table class="table">
-	<tr><th width="4%">#</th><th width="48%">En</th><th width="48%">Ja</th></tr>
+	<tr><th width="4%">#</th><th width="46%">En</th><th width="4%">#</th><th width="46%">Ja</th></tr>
 	<tr ng-repeat="sentence in doc.sentences">
 		<td>{{sentence.id}}</td>
 		<td>{{sentence.txt.en}}</td>
+		<td>
+			<a href="" ng-click="copyOriginal($index)" >-&gt;</a>
+		</td>
 		<td>
 			<textarea ng-model="sentence.txt.ja"
 				ng-focus="getSimilarSentences($index)"
