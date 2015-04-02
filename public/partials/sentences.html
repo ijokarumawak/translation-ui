@@ -9,6 +9,7 @@
 		<td>
 			<textarea ng-model="sentence.txt.ja"
 				ng-focus="getSimilarSentences($index)"
+				tabindex="{{$index + 1}}"
 				rows="{{sentence.txt.en.length / 30}}" >{{sentence.txt.ja}}</textarea>
 			<a href="" clip-copy="getTextToCopy($index)" >Copy</a>
 		</td>

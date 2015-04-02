@@ -83,6 +83,10 @@ angular.module('app', ['ngRoute', 'ui.router', 'ngClipboard'])
 			"Translating", "Translated", "Reviewing", "Reviewed", "Done"
 		];
 
+		$scope.progress = function(){
+			return $rootScope.progress;
+		}
+
 		$scope.save = function(){
 		  console.log("$scope.doc=", $scope.doc);
 			var promise = DocService.save($stateParams.docId, $scope.doc);
@@ -100,6 +104,18 @@ angular.module('app', ['ngRoute', 'ui.router', 'ngClipboard'])
 		['$scope', '$rootScope', '$stateParams', 'DocService',
 			function ($scope, $rootScope, $stateParams, DocService) {
 		console.log("SentenceCtrl is called!", $stateParams);
+
+		$scope.calculateProgress = function() {
+			// Calculate progress.
+			var numOfSentences = $scope.doc.sentences.length;
+			var numOfCompletes = $scope.doc.sentences.map(function(x){
+				if(x.txt.ja) return 1;
+				else return 0;
+			}).reduce(function(total, cnt){return total + cnt}, 0);
+			$rootScope.numOfSentences = numOfSentences;
+			$rootScope.numOfCompletes = numOfCompletes;
+			$rootScope.progress = parseInt(numOfCompletes / numOfSentences * 100)
+		}
 
 		$scope.getSimilarSentences = function(idx){
 			var sentence = $rootScope.doc.sentences[idx];
@@ -121,7 +137,11 @@ angular.module('app', ['ngRoute', 'ui.router', 'ngClipboard'])
 			  console.log("result=", result);
 				$rootScope.similarSentences = result.data;
 			});
+
+			$scope.calculateProgress();
 		}
+
+
 
 		$scope.getTextToCopy = function(idx){
 			var sentence = $rootScope.doc.sentences[idx];
