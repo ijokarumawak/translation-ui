@@ -125,12 +125,16 @@ angular.module('app', ['ngRoute', 'ui.router', 'ngClipboard'])
 			$rootScope.sentence = sentence;
 			// Get term.
 			var en = sentence.txt.en.toLowerCase().replace(/[^0-9a-z]/g, '');
-			DocService.getTerm(en).then(function(result){
-				// Auto assign.
-				if(result.data.ja && !sentence.txt.ja) {
-					sentence.txt.ja = result.data.ja;
-				}
-			});
+			if(en && en.length < 128) {
+				// Naive length check to avoid:
+				// Assertion failed: (buflen >= sz_ + term_len && "too small buffer"), function _NanRawString, file ../node_modules/nan/nan.h, line 1870.
+				DocService.getTerm(en).then(function(result){
+					// Auto assign.
+					if(result.data.ja && !sentence.txt.ja) {
+						sentence.txt.ja = result.data.ja;
+					}
+				});
+			}
 			// Get similar sentences.
 			var promise = DocService.getSimilarSentences(sentence.id);
 			promise.then(function(result){
