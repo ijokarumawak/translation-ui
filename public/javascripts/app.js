@@ -1,5 +1,23 @@
 angular.module('app', ['ngRoute', 'ui.router', 'ngClipboard'])
 
+  .service('ProjectService', ['$http', function($http){
+		this.query = function(){
+			return $http.get('/projects/').then(function(data){
+				console.log(data);
+				return data;
+			});
+		}
+
+    this.get = function(id){
+
+			console.log("Getting a project with id:" + id);
+			return $http.get('/projects/' + id).then(function(data){
+				console.log(data);
+				return data;
+			});
+		};
+	}])
+
   .service('DocService', ['$http', function($http){
 		this.query = function(){
 			return $http.get('/docs/').then(function(data){
@@ -45,12 +63,27 @@ angular.module('app', ['ngRoute', 'ui.router', 'ngClipboard'])
 		};
 	}])
 
+  .controller('ProjectsCtrl',
+		['$scope', 'ProjectService',
+			function ($scope, ProjectService) {
+		console.log("ProjectCtrl is called!");
+
+    var promise = ProjectService.query();
+		promise.then(function(result){
+			$scope.projects = result.data;
+		  console.log("$scope.projects=", $scope.projects);
+		});
+		
+  }])
+
   .controller('DocsCtrl',
-		['$scope', 'DocService',
-			function ($scope, DocService) {
+		['$scope', '$stateParams', 'DocService', 'ProjectService',
+			function ($scope, $stateParams, DocService, ProjectService) {
 		console.log("DocsCtrl is called!");
 
-    var promise = DocService.query();
+		// TODO: query with project
+    // var promise = DocService.query($stateParams.projectId);
+		var promise = ProjectService.get($stateParams.projectId);
 		promise.then(function(result){
 			$scope.docs = result.data;
 		  console.log("$scope.docs=", $scope.docs);
@@ -176,8 +209,23 @@ angular.module('app', ['ngRoute', 'ui.router', 'ngClipboard'])
   }])
 
 	.config(['$stateProvider', function ($stateProvider) {
+		$stateProvider.state('projects', {
+			url: "/projects",
+			views: {
+				'north': {
+					templateUrl: 'partials/not-implemented.html'
+				},
+				'center': {
+					templateUrl: 'partials/projects.html',
+          controller: 'ProjectsCtrl'
+				},
+				'south': {
+					templateUrl: 'partials/not-implemented.html'
+				}
+			}
+		});
 		$stateProvider.state('docs', {
-			url: "/docs",
+			url: "/projects/:projectId",
 			views: {
 				'north': {
 					templateUrl: 'partials/not-implemented.html'
@@ -226,7 +274,7 @@ angular.module('app', ['ngRoute', 'ui.router', 'ngClipboard'])
 	.run(['$state', function($state){
 		// State can be mapped by URL as well, by '/#/url'.
 		// When you access the root URL, this transition is needed.
-		$state.transitionTo('docs');
+		$state.transitionTo('projects');
 	}])
 
 ;
