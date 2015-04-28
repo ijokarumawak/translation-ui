@@ -29,12 +29,20 @@ router.get('/:id', function(req, res, next) {
 	var pjid = req.params.id;
 	// TODO: Use prepared statement instead of concatenating strings.
 	var query = N1qlQuery.fromString('select meta(doc).id, doc.title, doc.status, doc._updatedAt from translation as doc where _type = "document" and doc.project = "' + pjid + '" order by doc.title');
-	bucket.query(query, function(err, r){
+	bucket.query(query, function(err, docs){
 		if(err) {
-			res.status(500).send(bucket.queryhosts);
+			res.status(500).send(err);
 			return;
 		}
-		res.json(r);
+		bucket.get(pjid, function(err, r){
+		  if(err) {
+		  	res.status(500).send(err);
+		  	return;
+		  }
+			var pj = r.value;
+			pj.docs = docs;
+		  res.json(pj);
+		});
 	});
 });
 

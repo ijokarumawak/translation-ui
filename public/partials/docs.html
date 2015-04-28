@@ -6,7 +6,7 @@
 		<th>Updated at</th>
 		<th>Title</th>
 	</tr>
-	<tr ng-repeat="doc in docs">
+	<tr ng-repeat="doc in project.docs">
 		<td>{{doc.status}}</td>
 		<td>{{doc._updatedAt | date:'yyyy-MM-dd HH:mm:ss'}}</td>
 		<td><a href="#/docs/{{doc.id}}">{{doc.title}}</a></td>

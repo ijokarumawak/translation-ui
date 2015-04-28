@@ -77,16 +77,15 @@ angular.module('app', ['ngRoute', 'ui.router', 'ngClipboard'])
   }])
 
   .controller('DocsCtrl',
-		['$scope', '$stateParams', 'DocService', 'ProjectService',
-			function ($scope, $stateParams, DocService, ProjectService) {
+		['$rootScope', '$scope', '$stateParams', 'DocService', 'ProjectService',
+			function ($rootScope, $scope, $stateParams, DocService, ProjectService) {
 		console.log("DocsCtrl is called!");
 
-		// TODO: query with project
-    // var promise = DocService.query($stateParams.projectId);
+		// query docs with project
 		var promise = ProjectService.get($stateParams.projectId);
 		promise.then(function(result){
-			$scope.docs = result.data;
-		  console.log("$scope.docs=", $scope.docs);
+			$rootScope.project = result.data;
+		  console.log("$rootScope.project=", $rootScope.project);
 		});
 		
   }])
@@ -228,7 +227,7 @@ angular.module('app', ['ngRoute', 'ui.router', 'ngClipboard'])
 			url: "/projects/:projectId",
 			views: {
 				'north': {
-					templateUrl: 'partials/not-implemented.html'
+					templateUrl: 'partials/project-status.html'
 				},
 				'center': {
 					templateUrl: 'partials/docs.html',

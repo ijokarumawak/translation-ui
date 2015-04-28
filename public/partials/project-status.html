@@ -1,0 +1,18 @@
+<h3>{{project.name}}</h3>
+
+<div class="btn-group">
+	<a type="button" href="javascript: history.go(-1)" class="btn btn-default" aria-label="Back">
+	  <span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span>
+	</a>
+	<span ng-model="numOfSentences">{{numOfSentences}} </span>
+	<span >{{numOfCompletes / numOfSentences | percentage}}</span>
+</div>
+
+<div class="">
+<div class="progress">
+	<div class="progress-bar" role="progressbar" aria-valuenow="{{progress()}}" aria-valuemin="0" aria-valuemax="100" style="width: {{progress()}}%;">
+		{{progress()}}%
+  </div>
+</div>
+</div>
+
