@@ -4,14 +4,16 @@
 	<a type="button" href="javascript: history.go(-1)" class="btn btn-default" aria-label="Back">
 	  <span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span>
 	</a>
-	<span ng-model="numOfSentences">{{numOfSentences}} </span>
-	<span >{{numOfCompletes / numOfSentences | percentage}}</span>
+	<span ng-bind="progress.numOfCompletes"></span>
+	<span>/</span>
+	<span ng-bind="progress.numOfItems"></span>
+	<span>{{progress.percentage}} %</span>
 </div>
 
 <div class="">
 <div class="progress">
-	<div class="progress-bar" role="progressbar" aria-valuenow="{{progress()}}" aria-valuemin="0" aria-valuemax="100" style="width: {{progress()}}%;">
-		{{progress()}}%
+	<div class="progress-bar" role="progressbar" aria-valuenow="{{progress.percentage}}" aria-valuemin="0" aria-valuemax="100" style="width: {{progress.percentage}}%;">
+		{{progress.percentage}}%
   </div>
 </div>
 </div>

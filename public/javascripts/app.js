@@ -61,19 +61,33 @@ angular.module('app', ['ngRoute', 'ui.router', 'ngClipboard'])
 				return data;
 			});
 		};
+
+		this.calculateProgress = function(doc){
+			var numOfItems = doc.sentences.length;
+			var numOfCompletes = doc.sentences.map(function(x){
+				if(x.txt.ja) return 1;
+				else return 0;
+			}).reduce(function(total, cnt){return total + cnt}, 0);
+
+			var res = new Object();
+			res.numOfItems = numOfItems;
+			res.numOfCompletes = numOfCompletes;
+			res.percentage = parseInt(numOfCompletes / numOfItems * 100);
+			return res;
+		};
 	}])
 
   .controller('ProjectsCtrl',
 		['$scope', 'ProjectService',
 			function ($scope, ProjectService) {
-		console.log("ProjectCtrl is called!");
+		console.log("ProjectsCtrl is called!");
 
     var promise = ProjectService.query();
 		promise.then(function(result){
 			$scope.projects = result.data;
 		  console.log("$scope.projects=", $scope.projects);
 		});
-		
+
   }])
 
   .controller('DocsCtrl',
@@ -86,6 +100,18 @@ angular.module('app', ['ngRoute', 'ui.router', 'ngClipboard'])
 		promise.then(function(result){
 			$rootScope.project = result.data;
 		  console.log("$rootScope.project=", $rootScope.project);
+
+			var numOfItems = $rootScope.project.docs.length;
+			var numOfCompletes = $rootScope.project.docs.map(function(x){
+				if(x.status === "Done") return 1;
+				else return 0;
+			}).reduce(function(total, cnt){return total + cnt}, 0);
+
+			var res = new Object();
+			res.numOfItems = numOfItems;
+			res.numOfCompletes = numOfCompletes;
+			res.percentage = parseInt(numOfCompletes / numOfItems * 100);
+			$rootScope.progress = res;
 		});
 		
   }])
@@ -102,6 +128,9 @@ angular.module('app', ['ngRoute', 'ui.router', 'ngClipboard'])
 		promise.then(function(result){
 		  $rootScope.doc = result.data;
 		  console.log("$rootScope.doc=", $rootScope.doc);
+
+			$rootScope.progress = DocService.calculateProgress($rootScope.doc);
+		  console.log("$rootScope.progress=", $rootScope.progress);
 		});
 
   }])
@@ -114,10 +143,6 @@ angular.module('app', ['ngRoute', 'ui.router', 'ngClipboard'])
 		$scope.docStatusOptions = [
 			"Translating", "Translated", "Reviewing", "Reviewed", "Done"
 		];
-
-		$scope.progress = function(){
-			return $rootScope.progress;
-		}
 
 		$scope.save = function(){
 		  console.log("$scope.doc=", $scope.doc);
@@ -139,14 +164,7 @@ angular.module('app', ['ngRoute', 'ui.router', 'ngClipboard'])
 
 		$scope.calculateProgress = function() {
 			// Calculate progress.
-			var numOfSentences = $scope.doc.sentences.length;
-			var numOfCompletes = $scope.doc.sentences.map(function(x){
-				if(x.txt.ja) return 1;
-				else return 0;
-			}).reduce(function(total, cnt){return total + cnt}, 0);
-			$rootScope.numOfSentences = numOfSentences;
-			$rootScope.numOfCompletes = numOfCompletes;
-			$rootScope.progress = parseInt(numOfCompletes / numOfSentences * 100)
+			$rootScope.progress = DocService.calculateProgress($rootScope.doc);
 		}
 
 		$scope.getSimilarSentences = function(idx){
@@ -176,8 +194,6 @@ angular.module('app', ['ngRoute', 'ui.router', 'ngClipboard'])
 
 			$scope.calculateProgress();
 		}
-
-
 
 		$scope.getTextToCopy = function(idx){
 			var sentence = $rootScope.doc.sentences[idx];
